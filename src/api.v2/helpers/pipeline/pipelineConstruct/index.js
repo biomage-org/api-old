@@ -223,7 +223,12 @@ const createQCPipeline = async (experimentId, processingConfigUpdates, authJWT) 
     }
   });
 
+  const taskParams = {
+    sampleIds: experiment.samplesOrder,
+  };
+
   const context = {
+    taskParams,
     experimentId,
     accountId,
     roleArn,

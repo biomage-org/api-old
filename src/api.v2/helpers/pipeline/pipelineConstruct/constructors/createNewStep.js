@@ -25,8 +25,10 @@ const createTask = (taskName, context) => {
 
 const getQCParams = (task, context, stepArgs) => {
   const { perSample, uploadCountMatrix } = stepArgs;
+  const { taskParams } = context;
   return {
     ...task,
+    ...taskParams,
     ...perSample ? { 'sampleUuid.$': '$.sampleUuid' } : { sampleUuid: '' },
     ...uploadCountMatrix ? { uploadCountMatrix: true } : { uploadCountMatrix: false },
     authJWT: context.authJWT,
