@@ -41,5 +41,5 @@ spec:
   - configMapKeyRef:
       name: account-config
       namespace: flux
-      key: account-config.yaml
+      key: account-config-2.yaml
   # filled in by CI. do not modify.
