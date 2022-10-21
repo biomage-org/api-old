@@ -18,7 +18,7 @@ const parseSNSMessage = async (req) => {
   // First let's try parsing the body. It should be JSON.
   try {
     msg = JSON.parse(req.body);
-    logger.log('[IVA ] the message', msg);
+    logger.log('[IVA the message] ', msg);
   } catch (error) {
     logger.trace('[MSG ??] Error while parsing: ', error);
     throw error;
