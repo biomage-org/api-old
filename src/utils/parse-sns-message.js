@@ -11,6 +11,8 @@ const validator = new MessageValidator();
 const parseSNSMessage = async (req) => {
   let msg;
 
+  logger.log('[IVA ] ', req);
+  logger.log('[IVA ] ', req.body);
   logger.log('[MSG ??] SNS message of length', req.body.length, 'arrived.');
 
   // First let's try parsing the body. It should be JSON.
