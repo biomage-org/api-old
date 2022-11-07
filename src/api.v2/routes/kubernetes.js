@@ -10,6 +10,9 @@ const logger = getLogger();
 module.exports = {
   'kubernetes#event': async (req, res, next) => {
     logger.log('received kubernetes event');
+
+    console.log('*** req.body', req.body);
+
     try {
       const {
         reason, message, type, involvedObject: { name, namespace },
