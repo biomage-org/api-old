@@ -15,8 +15,19 @@ module.exports = {
 
     try {
       const {
-        reason, message, type, involvedObject: { name, namespace },
+        reason, message, type, involvedObject,
       } = req.body;
+
+      console.log('*** reason', reason);
+      console.log('*** message', message);
+      console.log('*** type', type);
+      console.log('*** involvedObject', involvedObject);
+
+      const { name, namespace } = involvedObject;
+
+      console.log('*** name', name);
+      console.log('*** namespace', namespace);
+
       logger.log(`[${reason}] received ${type} kubernetes event: ${message} ${name} in ${namespace}`);
 
       // remove only pods in your namespace and due to backoff errors
