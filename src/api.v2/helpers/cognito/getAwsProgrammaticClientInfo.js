@@ -10,7 +10,7 @@ async function getAwsProgrammaticClientInfo() {
     UserPoolId: poolId,
   };
 
-  const { UserPoolClients } = await config.dcognitoISP.listUserPoolClients(params).promise();
+  const { UserPoolClients } = await config.cognitoISP.listUserPoolClients(params).promise();
   // const appClientName = 'biomage-cellscope-cluster-default';
   const appClientName = `biomage-programmatic-client-${k8sEnv}`;
 
