@@ -33,7 +33,7 @@ const getCustomPlotUploadUrl = async (experimentId) => {
   const signedUrl = await getSignedUrl('putObject', params);
 
   return signedUrl;
-}
+};
 
 const getSampleFileUploadUrl = async (sampleFileId, metadata) => {
   const params = {
@@ -81,4 +81,9 @@ const getSampleFileDownloadUrl = async (experimentId, sampleId, fileType) => {
   return signedUrl;
 };
 
-module.exports = { getSampleFileUploadUrl, getSampleFileDownloadUrl, getSignedUrl };
+module.exports = {
+  getCustomPlotUploadUrl,
+  getSampleFileUploadUrl,
+  getSampleFileDownloadUrl,
+  getSignedUrl,
+};
