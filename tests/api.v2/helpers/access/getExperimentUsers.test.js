@@ -1,17 +1,9 @@
 // Disabled ts because it doesn't recognize jest mocks
 // @ts-nocheck
 
-// const cognito = require('../../../../src/api.v2/helpers/cognito/getAwsProgrammaticClientInfo');
 const getUser = require('../../../../src/api.v2/helpers/cognito/getUser');
 
 jest.mock('../../../../src/api.v2/helpers/cognito/getUser');
-
-// jest.mock('../../../../src/api.v2/helpers/cognito/getUser', (email) => ({
-//   UserAttributes: [
-//     { Name: 'name', Value: `${email}-test` },
-//     { Name: 'email', Value: `${email}@example.com` },
-//   ],
-// }));
 
 const UserAccess = require('../../../../src/api.v2/model/UserAccess');
 const AccessRole = require('../../../../src/utils/enums/AccessRole');

@@ -4,7 +4,9 @@ const getAwsPoolId = require('./getAwsPoolId');
 
 async function getUser(email) {
   const pId = await getAwsPoolId();
-  const user = await config.cognitoISP.adminGetUser({ UserPoolId: pId, Username: email }).promise();
-  return user.UserAttributes;
+  const params = { UserPoolId: pId, Username: email };
+  const { UserAttributes } = await config.cognitoISP.adminGetUser(params).promise();
+  return UserAttributes;
 }
+
 module.exports = getUser;

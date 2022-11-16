@@ -8,8 +8,12 @@ async function getAwsPoolId() {
   const k8sEnv = process.env.K8S_ENV || 'staging';
   const userPoolName = `biomage-user-pool-case-insensitive-${k8sEnv}`;
 
-  const poolId = UserPools.find((pool) => pool.Name === userPoolName).Id;
-  return poolId;
+  const pool = UserPools.find((p) => p.Name === userPoolName);
+  if (!pool) {
+    throw new Error(`getAwsPoolId: ${userPoolName}: not found`);
+  }
+
+  return pool.Id;
 }
 
 

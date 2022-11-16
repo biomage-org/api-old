@@ -61,8 +61,6 @@ const config = {
   pipelineNamespace: `pipeline-${process.env.SANDBOX_ID || 'default'}`,
   awsRegion,
   domainName,
-  // awsUserPoolIdPromise: getAwsPoolId(cognitoISP),
-  // awsProgrammaticClientlIdPromise: getAwsProgrammaticClientInfo(cognitoISP),
   cognitoISP,
   api: {
     prefix: '/',
