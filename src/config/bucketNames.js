@@ -8,6 +8,7 @@ const bucketNames = {
   FILTERED_CELLS: `biomage-filtered-cells-${config.clusterEnv}-${config.awsAccountId}`,
   WORKER_RESULTS: `worker-results-${config.clusterEnv}-${config.awsAccountId}`,
   PLOTS: `plots-tables-${config.clusterEnv}-${config.awsAccountId}`,
+  CUSTOM_PLOTS: `custom-plots-images-${config.clusterEnv}-${config.awsAccountId}`
 };
 
 module.exports = bucketNames;

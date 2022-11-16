@@ -22,6 +22,19 @@ const getSignedUrl = async (operation, params) => {
   return s3.getSignedUrlPromise(operation, params);
 };
 
+const getCustomPlotUploadUrl = async (experimentId) => {
+  const params = {
+    Bucket: bucketNames.CUSTOM_PLOTS,
+    Key: `${experimentId}`,
+    // 1 hour timeout of upload link
+    Expires: 3600,
+  };
+
+  const signedUrl = await getSignedUrl('putObject', params);
+
+  return signedUrl;
+}
+
 const getSampleFileUploadUrl = async (sampleFileId, metadata) => {
   const params = {
     Bucket: bucketNames.SAMPLE_FILES,

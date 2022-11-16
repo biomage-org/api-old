@@ -12,8 +12,8 @@ module.exports = {
     try {
       const clientId = await getAwsProgrammaticClientInfo();
       const response = {
-        ClientId: clientId,
-        ClientRegion: config.awsRegion,
+        clientId: clientId,
+        clientRegion: config.awsRegion,
       };
       res.status(200).send(response);
     } catch (e) {
