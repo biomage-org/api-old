@@ -1237,6 +1237,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
+  '/customPlots/{experimentId}/imageUploadUrl':
+    get:
+      summary: Get image upload signed url
+      description: 'Get image upload signed url'
+      operationId: getImageUploadUrl
+      parameters:
+        - name: experimentId
+          required: true
+          in: path
+          description: ID of the experiment.
+          schema:
+            type: string
+      x-eov-operation-id: customPlots#getImageUploadUrl
+      x-eov-operation-handler: routes/customPlots
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'  
+        '401':
+          description: The request lacks authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '403':
+          description: Forbidden request for this user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+    
   '/experiments/{experimentId}/samples/{sampleId}/sampleFiles/{sampleFileType}':
     post:
       summary: Create a new file for a sample
