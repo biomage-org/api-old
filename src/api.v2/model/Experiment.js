@@ -240,14 +240,20 @@ class Experiment extends BasicModel {
 
     const filenamePrefix = experimentId.split('-')[0];
     const requestedBucketName = `${downloadType}-${clusterEnv}-${config.awsAccountId}`;
-    const objectKey = `${experimentId}/r.rds`;
+    let objectKey;
 
     switch (requestedBucketName) {
       case bucketNames.PROCESSED_MATRIX:
+        objectKey = `${experimentId}/r.rds`;
         downloadedFileName = `${filenamePrefix}_processed_matrix.rds`;
         break;
       case bucketNames.RAW_SEURAT:
+        objectKey = `${experimentId}/r.rds`;
         downloadedFileName = `${filenamePrefix}_raw_matrix.rds`;
+        break;
+      case bucketNames.CELL_SETS:
+        objectKey = experimentId;
+        downloadedFileName = `${filenamePrefix}_cell_sets.json`;
         break;
       default:
         throw new BadRequestError('Invalid download type requested');

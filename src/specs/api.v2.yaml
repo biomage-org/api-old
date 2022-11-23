@@ -1314,7 +1314,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPError'
-
+    delete:
+      summary: Delete custom plot image
+      operationId: deleteCustomImage
+      x-eov-operation-id: customPlots#deleteImage
+      x-eov-operation-handler: routes/customPlots
+      parameters:
+        - name: experimentId
+          required: true
+          in: path
+          description: ID of the experiment.
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                imageId:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPSuccess'
+        '401':
+          description: The request lacks authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '403':
+          description: The user does not have permissions to revoke the role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '404':
+          description: Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+      description: Delete a role for a user in experiment
+                  
   '/experiments/{experimentId}/samples/{sampleId}/sampleFiles/{sampleFileType}':
     post:
       summary: Create a new file for a sample

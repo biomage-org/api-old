@@ -1,12 +1,12 @@
 const _ = require('lodash');
 
+const { v4: uuidv4 } = require('uuid');
 const AWS = require('../../../utils/requireAWS');
 const config = require('../../../config');
 
 const bucketNames = require('../../../config/bucketNames');
 const SampleFile = require('../../model/SampleFile');
 const { NotFoundError } = require('../../../utils/responses');
-const { v4: uuidv4 } = require('uuid');
 
 const { listObjects } = require('./listObjects');
 
@@ -40,11 +40,10 @@ const getCustomPlotUploadUrl = async (experimentId) => {
 };
 
 const getCustomPlotDownloadUrl = async (experimentId) => {
-
   const data = await listObjects(bucketNames.CUSTOM_PLOTS, experimentId);
-  const keys = data.map(entry => entry.Key);
+  const keys = data.map((entry) => entry.Key);
 
-  const promises = keys.map(key => {
+  const promises = keys.map((key) => {
     const params = {
       Bucket: bucketNames.CUSTOM_PLOTS,
       Key: key,
@@ -56,7 +55,8 @@ const getCustomPlotDownloadUrl = async (experimentId) => {
   });
 
   const signedUrls = await Promise.all(promises);
-  return signedUrls;
+
+  return { signedUrls, keys };
 };
 
 const getSampleFileUploadUrl = async (sampleFileId, metadata) => {
