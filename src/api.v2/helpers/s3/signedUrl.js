@@ -1,11 +1,14 @@
 const _ = require('lodash');
 
+const { v4: uuidv4 } = require('uuid');
 const AWS = require('../../../utils/requireAWS');
 const config = require('../../../config');
 
 const bucketNames = require('../../../config/bucketNames');
 const SampleFile = require('../../model/SampleFile');
 const { NotFoundError } = require('../../../utils/responses');
+
+const { listObjects } = require('./listObjects');
 
 const getSignedUrl = async (operation, params) => {
   if (!params.Bucket) throw new Error('Bucket is required');
@@ -20,6 +23,40 @@ const getSignedUrl = async (operation, params) => {
   const s3 = new AWS.S3(S3Config);
 
   return s3.getSignedUrlPromise(operation, params);
+};
+
+const getCustomPlotUploadUrl = async (experimentId) => {
+  const plotUUID = uuidv4();
+  const params = {
+    Bucket: bucketNames.CUSTOM_PLOTS,
+    Key: `${experimentId}/${plotUUID}`,
+    // 1 hour timeout of upload link
+    Expires: 3600,
+  };
+
+  const signedUrl = await getSignedUrl('putObject', params);
+
+  return signedUrl;
+};
+
+const getCustomPlotDownloadUrl = async (experimentId) => {
+  const data = await listObjects(bucketNames.CUSTOM_PLOTS, experimentId);
+  const keys = data.map((entry) => entry.Key);
+
+  const promises = keys.map((key) => {
+    const params = {
+      Bucket: bucketNames.CUSTOM_PLOTS,
+      Key: key,
+      // 1 hour timeout of upload link
+      Expires: 3600,
+    };
+
+    return getSignedUrl('getObject', params);
+  });
+
+  const signedUrls = await Promise.all(promises);
+
+  return { signedUrls, keys };
 };
 
 const getSampleFileUploadUrl = async (sampleFileId, metadata) => {
@@ -68,4 +105,10 @@ const getSampleFileDownloadUrl = async (experimentId, sampleId, fileType) => {
   return signedUrl;
 };
 
-module.exports = { getSampleFileUploadUrl, getSampleFileDownloadUrl, getSignedUrl };
+module.exports = {
+  getCustomPlotUploadUrl,
+  getCustomPlotDownloadUrl,
+  getSampleFileUploadUrl,
+  getSampleFileDownloadUrl,
+  getSignedUrl,
+};
