@@ -45,16 +45,10 @@ const cognitoISP = new AWS.CognitoIdentityServiceProvider({
   region: awsRegion,
 });
 
-async function getAwsPoolId() {
-  const { UserPools } = await cognitoISP.listUserPools({ MaxResults: 60 }).promise();
-  // when k8s is undefined we are in development where we use staging user pool so we set
-  // it as the default one.
-  const k8sEnv = process.env.K8S_ENV || 'staging';
-  const userPoolName = `biomage-user-pool-case-insensitive-${k8sEnv}`;
-
-  const poolId = UserPools.find((pool) => pool.Name === userPoolName).Id;
-  return poolId;
-}
+const externalOrigins = [
+  'https://sandbox.elabjournal.com',
+  'https://elabjournal.com',
+];
 
 const config = {
   port: parseInt(process.env.PORT, 10) || 3000,
@@ -67,34 +61,30 @@ const config = {
   pipelineNamespace: `pipeline-${process.env.SANDBOX_ID || 'default'}`,
   awsRegion,
   domainName,
-  awsUserPoolIdPromise: getAwsPoolId(),
   cognitoISP,
   api: {
     prefix: '/',
   },
-  workerInstanceConfigUrl: `https://raw.githubusercontent.com/${githubOrganisationName}/iac/master/releases/production/worker.yaml`,
-  pipelineInstanceConfigUrl: `https://raw.githubusercontent.com/${githubOrganisationName}/iac/master/releases/production/pipeline.yaml`,
+  pipelineInstanceConfigUrl: `https://raw.githubusercontent.com/${githubOrganisationName}/releases/master/production/pipeline.yaml`,
   cachingEnabled: true,
-  corsOriginUrl: `https://${domainName}`,
+  corsOriginUrl: [...externalOrigins, `https://${domainName}`],
   adminSub: '032abd44-0cd3-4d58-af21-850ca0b95ac7',
 };
 
 
 // We are in permanent develop staging environment
 if (config.clusterEnv === 'staging' && config.sandboxId === 'default') {
-  config.workerInstanceConfigUrl = `https://raw.githubusercontent.com/${githubOrganisationName}/iac/master/releases/staging/worker.yaml`;
-  config.pipelineInstanceConfigUrl = `https://raw.githubusercontent.com/${githubOrganisationName}/iac/master/releases/staging/pipeline.yaml`;
+  config.pipelineInstanceConfigUrl = `https://raw.githubusercontent.com/${githubOrganisationName}/releases/master/staging/pipeline.yaml`;
   config.cachingEnabled = false;
-  config.corsOriginUrl = `https://ui-default.${domainName}`;
+  config.corsOriginUrl = [...externalOrigins, `https://ui-default.${domainName}`];
   config.adminSub = '0b17683f-363b-4466-b2e2-5bf11c38a76e';
 }
 
 // We are in user staging environments
 if (config.clusterEnv === 'staging' && config.sandboxId !== 'default') {
-  config.workerInstanceConfigUrl = `https://raw.githubusercontent.com/${githubOrganisationName}/iac/master/releases/staging/${config.sandboxId}.yaml`;
-  config.pipelineInstanceConfigUrl = `https://raw.githubusercontent.com/${githubOrganisationName}/iac/master/releases/staging/${config.sandboxId}.yaml`;
+  config.pipelineInstanceConfigUrl = `https://raw.githubusercontent.com/${githubOrganisationName}/releases/master/staging/${config.sandboxId}.yaml`;
   config.cachingEnabled = false;
-  config.corsOriginUrl = `https://ui-${config.sandboxId}.${domainName}`;
+  config.corsOriginUrl = [...externalOrigins, `https://ui-${config.sandboxId}.${domainName}`];
   config.adminSub = '0b17683f-363b-4466-b2e2-5bf11c38a76e';
 }
 
@@ -112,7 +102,7 @@ if (config.clusterEnv === 'development') {
     s3ForcePathStyle: true,
   });
 
-  config.corsOriginUrl = 'http://localhost:5000';
+  config.corsOriginUrl = [...externalOrigins, 'http://localhost:5000'];
   config.adminSub = '0b17683f-363b-4466-b2e2-5bf11c38a76e';
 }
 

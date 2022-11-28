@@ -15,6 +15,14 @@ const createLocalPipeline = (nextStep) => ({
   },
 });
 
+const submitBatchJob = (nextStep) => ({
+  SubmitBatchJob: {
+    XStepType: 'submit-batch-job',
+    Next: nextStep,
+    ResultPath: null,
+  },
+});
+
 const assignPipelineToPod = (nextStep) => ({
   RequestPod: {
     XStepType: 'request-pod',
@@ -53,38 +61,47 @@ const getPipelineStepNames = () => {
 // if there are map states with nested substeps it returns those sub-steps too
 const getQcPipelineStepNames = () => getSkeletonStepNames(qcPipelineSteps);
 
-const buildInitialSteps = (clusterEnv, nextStep) => {
+const buildInitialSteps = (clusterEnv, nextStep, runInBatch) => {
   // if we are running locally launch a pipeline job
   if (clusterEnv === 'development') {
     return createLocalPipeline(nextStep);
   }
+
+  if (runInBatch) {
+    return submitBatchJob(nextStep);
+  }
+
   // if we are in aws assign a pod to the pipeline
   return assignPipelineToPod(nextStep);
 };
 
-const getStateMachineFirstStep = (clusterEnv) => {
+const getStateMachineFirstStep = (clusterEnv, runInBatch) => {
   if (clusterEnv === 'development') {
     return 'DeleteCompletedPipelineWorker';
+  }
+
+  if (runInBatch) {
+    return 'SubmitBatchJob';
   }
 
   return 'RequestPod';
 };
 
 
-const getGem2sPipelineSkeleton = (clusterEnv) => ({
+const getGem2sPipelineSkeleton = (clusterEnv, runInBatch = false) => ({
   Comment: `Gem2s Pipeline for clusterEnv '${clusterEnv}'`,
-  StartAt: getStateMachineFirstStep(clusterEnv),
+  StartAt: getStateMachineFirstStep(clusterEnv, runInBatch),
   States: {
-    ...buildInitialSteps(clusterEnv, 'DownloadGem'),
+    ...buildInitialSteps(clusterEnv, 'DownloadGem', runInBatch),
     ...gem2SPipelineSteps,
   },
 });
 
-const getQcPipelineSkeleton = (clusterEnv, qcSteps) => ({
+const getQcPipelineSkeleton = (clusterEnv, qcSteps, runInBatch = false) => ({
   Comment: `QC Pipeline for clusterEnv '${clusterEnv}'`,
-  StartAt: getStateMachineFirstStep(clusterEnv),
+  StartAt: getStateMachineFirstStep(clusterEnv, runInBatch),
   States: {
-    ...buildInitialSteps(clusterEnv, qcSteps[0]),
+    ...buildInitialSteps(clusterEnv, qcSteps[0], runInBatch),
     ...buildQCPipelineSteps(qcSteps),
   },
 });

@@ -1,8 +1,8 @@
-const { WORKER_RESULTS } = require('../s3/bucketNames');
+const { WORKER_RESULTS } = require('../../../config/bucketNames');
 
 const AWS = require('../../../utils/requireAWS');
 const getLogger = require('../../../utils/getLogger');
-const { getSignedUrl } = require('../../../utils/aws/s3');
+const { getSignedUrl } = require('../s3/signedUrl');
 const { UnauthorizedError, NotFoundError, InternalServerError } = require('../../../utils/responses');
 
 const logger = getLogger();
@@ -53,7 +53,7 @@ const getWorkResults = async (experimentId, ETag) => {
   await validateTagMatching(experimentId, params);
   logger.log(`Found worker results for experiment: ${experimentId}, Etag: ${ETag}`);
 
-  const signedUrl = getSignedUrl('getObject', params);
+  const signedUrl = await getSignedUrl('getObject', params);
   return { signedUrl };
 };
 
