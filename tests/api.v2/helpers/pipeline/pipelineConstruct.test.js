@@ -11,6 +11,10 @@ const experimentExecutionInstance = new ExperimentExecution();
 
 const mockStepNames = getQcPipelineStepNames();
 
+jest.mock('../../../../src/api.v2/helpers/pipeline/batch/terminateJobs');
+jest.mock('../../../../src/api.v2/helpers/pipeline/batch/listActiveJobs');
+jest.mock('../../../../src/api.v2/helpers/pipeline/hooks/podCleanup');
+
 const { createQCPipeline, createGem2SPipeline } = jest.requireActual('../../../../src/api.v2/helpers/pipeline/pipelineConstruct');
 
 jest.mock('crypto', () => ({
@@ -31,11 +35,8 @@ const mockExperimentRow = {
   samplesOrder: ['oneSample', 'otherSample'],
   processingConfig: {
     doubletScores: {
-      enabled: true,
-      filterSettings: {
-        oneSetting: 1,
-      },
       oneSample: {
+        enabled: true,
         filterSettings: {
           oneSetting: 1,
         },
@@ -269,6 +270,10 @@ describe('test for pipeline services', () => {
       callback(null, { executionArn: 'test-machine' });
     });
 
+    experimentInstance.findById.mockReturnValueOnce(
+      { first: () => Promise.resolve(mockExperimentRow) },
+    );
+
     await createGem2SPipeline('testExperimentId', taskParams);
     expect(describeClusterSpy).toMatchSnapshot();
 
@@ -312,6 +317,10 @@ describe('test for pipeline services', () => {
       startExecutionSpy(params);
       callback(null, { executionArn: 'test-execution' });
     });
+
+    experimentInstance.findById.mockReturnValueOnce(
+      { first: () => Promise.resolve(mockExperimentRow) },
+    );
 
     createGem2SPipeline.waitForDefinitionToPropagate = () => true;
 
