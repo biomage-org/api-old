@@ -1,3 +1,5 @@
+// TESTING IMAGE UPDATE
+
 /* eslint-disable no-console */
 require('log-timestamp');
 const express = require('express');
