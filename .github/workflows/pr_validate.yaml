@@ -96,6 +96,16 @@ jobs:
           ${{ github.event.pull_request.body }}
           EOF
 
+      - id: check-api-schema-checkbox
+        name: Check if api schema has been changed
+        continue-on-error: true
+        run: |-
+          REGEX="\[[Xx]\] Started end-to-end tests on the latest commit\."
+
+          pcregrep -o1 -M "$REGEX" <<\EOF
+          ${{ github.event.pull_request.body }}
+          EOF
+
   run-integration-tests:
     name: Run integration tests
     runs-on: ubuntu-20.04
@@ -124,6 +134,21 @@ jobs:
 
           echo "::set-output name=should-e2e-cancel::$SHOULD_CANCEL_E2E"
           echo "::set-output name=should-e2e-run::$SHOULD_RUN_E2E"
+      - id: check-api.yaml-change
+        name: Check if api.yaml spec has been changed
+        run: |-
+          SPEC_IS_CHANGED = $(git diff --exit-code src/specs/api.v2.yaml)
+          echo "API spec is changed"
+          echo $SPEC_IS_CHANGED
+
+          if [SPEC_IS_CHANGED]; then
+            UNCHECKED_BODY=$(sed 's/- \[[Xx]\] If this is unchecked,/- \[ \] If this is unchecked/' <<\EOF
+              ${{ steps.get-pr-body.outputs.body }}
+              EOF
+            )
+
+          fi  
+
 
       - id: cancel
         name: Cancel if staging is not N/A and box is not checked

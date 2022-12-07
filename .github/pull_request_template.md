@@ -62,7 +62,7 @@ Have best practices and ongoing refactors being observed in this PR
 **You must check the box below** to run integration tests on the latest commit on your PR branch.
 Integration tests have to pass before the PR can be merged. Without checking the box, your PR
 **will not pass** the required status checks for merging.
-
+- [ ] If this is unchecked, make sure the changes in **api.v2.yaml** are not breaking any integrations and check the box.
 - [ ] Started end-to-end tests on the latest commit.
 
 ### Documentation updates
