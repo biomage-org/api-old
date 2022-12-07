@@ -100,7 +100,7 @@ jobs:
         name: Check if api schema has been changed
         continue-on-error: true
         run: |-
-          REGEX="\[[Xx]\] Started end-to-end tests on the latest commit\."
+          REGEX="\[[Xx]\] If this is unchecked,"
 
           pcregrep -o1 -M "$REGEX" <<\EOF
           ${{ github.event.pull_request.body }}
@@ -134,6 +134,7 @@ jobs:
 
           echo "::set-output name=should-e2e-cancel::$SHOULD_CANCEL_E2E"
           echo "::set-output name=should-e2e-run::$SHOULD_RUN_E2E"
+          
       - id: check-api.yaml-change
         name: Check if api.yaml spec has been changed
         run: |-
