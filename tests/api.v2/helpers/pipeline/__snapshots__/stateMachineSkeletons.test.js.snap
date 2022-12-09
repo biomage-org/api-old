@@ -1084,11 +1084,11 @@ exports[`non-tests to document the State Machines - qc production with specific 
           "ResourceRequirements": [
             {
               "Type": "VCPU",
-              "Value": "16"
+              "Value": "15.9"
             },
             {
               "Type": "MEMORY",
-              "Value": "2048"
+              "Value": "1798"
             }
           ]
         }
