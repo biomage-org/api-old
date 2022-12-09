@@ -5,6 +5,9 @@ const submitBatchJob = (context, step) => {
     activityArn, podCpus, podMemory, processName, environment, experimentId,
   } = context;
 
+  const DATADOG_VCPU = 0.1;
+  const DATADOG_MEMORY = 250;
+
   const DEFAULT_CPUS = 2;
   const DEFAULT_MEM = 8192; // MiB
   const cpus = podCpus || DEFAULT_CPUS;
@@ -52,11 +55,11 @@ const submitBatchJob = (context, step) => {
         ResourceRequirements: [
           {
             Type: 'VCPU',
-            Value: `${cpus}`,
+            Value: `${parseFloat(cpus) - DATADOG_VCPU}`,
           },
           {
             Type: 'MEMORY',
-            Value: `${mem}`,
+            Value: `${parseFloat(mem) - DATADOG_MEMORY}`,
           },
         ],
       },
