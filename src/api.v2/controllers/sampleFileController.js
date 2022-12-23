@@ -40,11 +40,11 @@ const createFile = async (req, res) => {
 const patchFile = async (req, res) => {
   const {
     params: { experimentId, sampleId, sampleFileType },
-    body: { uploadStatus },
+    body: { uploadStatus, status },
   } = req;
   logger.log(`Patching file ${sampleFileType} for sample ${sampleId} in experiment ${experimentId}`);
 
-  await new SampleFile().updateUploadStatus(sampleId, sampleFileType, uploadStatus);
+  await new SampleFile().updateUploadStatus(sampleId, sampleFileType, status);
 
   logger.log(`Finished patching sample file for experiment ${experimentId}, sample ${sampleId}, sampleFileType ${sampleFileType}`);
   res.json(OK());
