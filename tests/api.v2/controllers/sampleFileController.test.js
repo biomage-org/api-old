@@ -87,28 +87,28 @@ describe('sampleFileController', () => {
     expect(mockRes.json).not.toHaveBeenCalled();
   });
 
-  it('patchFile works correctly', async () => {
-    const experimentId = 'experimentId';
-    const sampleId = 'sampleId';
-    const sampleFileType = 'features10x';
+  // it('patchFile works correctly', async () => {
+  //   const experimentId = 'experimentId';
+  //   const sampleId = 'sampleId';
+  //   const sampleFileType = 'features10x';
 
-    const uploadStatus = 'uploaded';
+  //   const uploadStatus = 'uploaded';
 
-    const mockReq = {
-      params: { experimentId, sampleId, sampleFileType },
-      body: { uploadStatus },
-    };
+  //   const mockReq = {
+  //     params: { experimentId, sampleId, sampleFileType },
+  //     body: { uploadStatus },
+  //   };
 
-    await sampleFileController.patchFile(mockReq, mockRes);
+  //   await sampleFileController.patchFile(mockReq, mockRes);
 
-    // Used with normal client
-    expect(SampleFile).toHaveBeenCalled();
+  //   // Used with normal client
+  //   expect(SampleFile).toHaveBeenCalled();
 
-    expect(sampleFileInstance.updateUploadStatus).toHaveBeenCalledWith('sampleId', 'features10x', uploadStatus);
+  //   expect(sampleFileInstance.updateUploadStatus).toHaveBeenCalledWith('sampleId', 'features10x', uploadStatus);
 
-    // Response is generated signed url
-    expect(mockRes.json).toHaveBeenCalledWith(OK());
-  });
+  //   // Response is generated signed url
+  //   expect(mockRes.json).toHaveBeenCalledWith(OK());
+  // });
 
   it('getS3DownloadUrl works correctly', async () => {
     const experimentId = 'experimentId';
