@@ -61,19 +61,19 @@ Array [
             "method": "harmony",
             "methodSettings": Object {
               "fastmnn": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
               "harmony": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
               "seuratv4": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
               "unisample": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
             },
@@ -228,19 +228,19 @@ Array [
             "method": "harmony",
             "methodSettings": Object {
               "fastmnn": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
               "harmony": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
               "seuratv4": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
               "unisample": Object {
-                "normalisation": "logNormalize",
+                "normalisation": "LogNormalize",
                 "numGenes": 2000,
               },
             },

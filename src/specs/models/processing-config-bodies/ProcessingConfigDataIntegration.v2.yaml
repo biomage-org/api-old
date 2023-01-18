@@ -26,7 +26,7 @@ properties:
               normalisation:
                 type: string
                 enum:
-                  - logNormalize
+                  - LogNormalize
                   - scTransform
           fastmnn:
             type: object
@@ -36,7 +36,7 @@ properties:
               normalisation:
                 type: string
                 enum:
-                  - logNormalize
+                  - LogNormalize
                   - scTransform
             required:
               - numGenes
@@ -49,7 +49,7 @@ properties:
               normalisation:
                 type: string
                 enum:
-                  - logNormalize
+                  - LogNormalize
                   - scTransform
             required:
               - numGenes
