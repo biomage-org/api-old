@@ -11,9 +11,11 @@ module.exports = {
   'kubernetes#event': async (req, res, next) => {
     logger.log('received kubernetes event');
     try {
+      // Refer to configuration in IAC kubernetes-event-exporter.yaml to see shape of message object
       const {
-        reason, message, type, involvedObject: { name, namespace },
+        reason, message, type, name, namespace,
       } = req.body;
+
       logger.log(`[${reason}] received ${type} kubernetes event: ${message} ${name} in ${namespace}`);
 
       // remove only pods in your namespace and due to backoff errors
