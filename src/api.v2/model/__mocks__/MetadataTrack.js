@@ -4,8 +4,6 @@ const stub = {
   createNewMetadataTrack: jest.fn(),
   createNewSamplesValues: jest.fn(),
   patchValueForSample: jest.fn(),
-  bulkUpdateMetadata: jest.fn(),
-
   ...BasicModel,
 };
 

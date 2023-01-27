@@ -3,7 +3,6 @@ const {
   patchMetadataTrack,
   patchValueForSample,
   deleteMetadataTrack,
-  createMetadataFromFile,
 } = require('../controllers/metadataTrackController');
 
 const { expressAuthorizationMiddleware } = require('../middlewares/authMiddlewares');
@@ -24,9 +23,5 @@ module.exports = {
   'metadataTrack#deleteMetadataTrack': [
     expressAuthorizationMiddleware,
     (req, res, next) => deleteMetadataTrack(req, res).catch(next),
-  ],
-  'metadataTrack#createMetadataFromFile': [
-    expressAuthorizationMiddleware,
-    (req, res, next) => createMetadataFromFile(req, res).catch(next),
   ],
 };
