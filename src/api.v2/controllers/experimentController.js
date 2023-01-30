@@ -1,16 +1,19 @@
 const _ = require('lodash');
 
 const Experiment = require('../model/Experiment');
+const ExperimentParent = require('../model/ExperimentParent');
 const UserAccess = require('../model/UserAccess');
+const Sample = require('../model/Sample');
 
 const getLogger = require('../../utils/getLogger');
-const { OK, NotFoundError } = require('../../utils/responses');
+const { OK, NotFoundError, MethodNotAllowedError } = require('../../utils/responses');
 const sqlClient = require('../../sql/sqlClient');
 
 const getExperimentBackendStatus = require('../helpers/backendStatus/getExperimentBackendStatus');
-const Sample = require('../model/Sample');
 const invalidatePlotsForEvent = require('../../utils/plotConfigInvalidation/invalidatePlotsForEvent');
 const events = require('../../utils/plotConfigInvalidation/events');
+const errorCodes = require('../../sql/errorCodes');
+const tableNames = require('../model/tableNames');
 
 const logger = getLogger('[ExperimentController] - ');
 
@@ -73,7 +76,26 @@ const deleteExperiment = async (req, res) => {
   const { params: { experimentId } } = req;
   logger.log(`Deleting experiment ${experimentId}`);
 
-  const result = await new Experiment().deleteById(experimentId);
+  let result;
+  try {
+    result = await new Experiment().deleteById(experimentId);
+  } catch (e) {
+    if (
+      e.code === errorCodes.FOREIGN_KEY_VIOLATION
+      && e.table === tableNames.EXPERIMENT_PARENT
+      && e.constraint === 'experiment_parent_parent_experiment_id_foreign'
+      && e.detail.includes('is still referenced from table')
+    ) {
+      const subsets = await new ExperimentParent().find({ parent_experiment_id: experimentId });
+
+      const subsetExperimentIds = _.map(subsets, 'experimentId');
+
+      throw new MethodNotAllowedError(
+        `Experiment ${experimentId} can't be deleted.
+        You'll need to first delete its subsets: ${subsetExperimentIds.join(', ')}`,
+      );
+    }
+  }
 
   if (result.length === 0) {
     throw new NotFoundError(`Experiment ${experimentId} not found`);

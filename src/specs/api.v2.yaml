@@ -519,6 +519,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HTTPError"
+        "405":
+          description: Method not allowed error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPError"
         "424":
           description: Terms not accepted error.
           content:
