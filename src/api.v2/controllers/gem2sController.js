@@ -34,6 +34,9 @@ const runGem2s = async (req, res) => {
 const handleResponse = async (req, res) => {
   let result;
 
+  console.log('resDebug');
+  console.log(res);
+
   try {
     result = await parseSNSMessage(req, snsTopics.WORK_RESULTS);
   } catch (e) {
