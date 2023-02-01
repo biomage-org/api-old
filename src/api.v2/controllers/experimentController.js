@@ -89,10 +89,13 @@ const deleteExperiment = async (req, res) => {
       const subsets = await new ExperimentParent().find({ parent_experiment_id: experimentId });
 
       const subsetExperimentIds = _.map(subsets, 'experimentId');
+      const subsetExperiments = await new Experiment().findAll().whereIn('experiment_id', subsetExperimentIds);
+
+      const subsetsInfo = subsetExperiments.map(({ id, name }) => `id: ${id}, name: ${name}`);
 
       throw new MethodNotAllowedError(
         `Experiment ${experimentId} can't be deleted.
-        You'll need to first delete its subsets: ${subsetExperimentIds.join(', ')}`,
+        You'll need to first delete its subsets: ${subsetsInfo.join(', ')}`,
       );
     }
   }
