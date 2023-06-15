@@ -22,7 +22,9 @@ const allowedResources = {
     '/experiments/(?<experimentId>.*)/subset',
   ],
   [VIEWER]: [
+    'socket',
     '/experiments/(?<experimentId>.*)/clone',
+    '/experiments/(?<experimentId>.*)/subset',
   ],
 };
 const isRoleAuthorized = (role, resource, method) => {
